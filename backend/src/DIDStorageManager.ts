@@ -53,11 +53,19 @@ export class DIDStorageManager {
 
   /**
    * Find a matching DID record by matching outpoint
-   * @param {string} outpoint - Outpoint to query by
+   * @param {string} outpoint - Outpoint to query by (format: "txid.outputIndex")
    * @returns {Promise<LookupFormula>} - Returns matching UTXO references
    */
   async findByOutpoint(outpoint: string): Promise<LookupFormula> {
-    return await this.findRecordWithQuery({ outpoint })
+    // Parse txid and outputIndex from the outpoint string (format: "txid.outputIndex")
+    const [txid, outputIndexStr] = outpoint.split('.')
+    const outputIndex = parseInt(outputIndexStr, 10)
+
+    if (!txid || isNaN(outputIndex)) {
+      throw new Error('Invalid outpoint format. Expected "txid.outputIndex"')
+    }
+
+    return await this.findRecordWithQuery({ txid, outputIndex })
   }
 
   /**
