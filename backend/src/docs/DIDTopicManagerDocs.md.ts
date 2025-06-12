@@ -5,8 +5,8 @@ export default `# DID Topic Manager Documentation
     ## Admissibility Rules
 
   - The transaction must have valid inputs and outputs.
-    - Each output must be decoded and validated according to the Identity protocol.
+    - Each output must be decoded and validated according to the DID token protocol.
     - The serial number must be a valid base64 string.
 
-    For more details, refer to the official Identity protocol documentation.
+    For more details, refer to the official DID protocol documentation.
   `
