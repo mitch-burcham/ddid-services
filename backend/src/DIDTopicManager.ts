@@ -41,10 +41,12 @@ export default class DIDTopicManager implements TopicManager {
             throw new Error('DID token must contain a valid serialNumber')
           }
 
+          // TODO: Consider adding other validation logic here.
+          // Ex. should be linked to certifier
           // Check that the field is exactly 32 bytes in length
-          if (result.fields[0].length !== 32) {
-            throw new Error('DID token serial number must be exactly 32 bytes in length')
-          }
+          // if (result.fields[0].length !== 32) {
+          //   throw new Error('DID token serial number must be exactly 32 bytes in length')
+          // }
 
           outputsToAdmit.push(i)
         } catch (error) {
