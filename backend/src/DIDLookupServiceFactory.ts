@@ -1,9 +1,9 @@
 import { DIDStorageManager } from './DIDStorageManager.js'
 import { AdmissionMode, LookupFormula, LookupQuestion, LookupService, OutputAdmittedByTopic, OutputSpent, SpendNotificationMode } from '@bsv/overlay'
-import { LookupAnswer, PushDrop, Utils } from '@bsv/sdk'
+import { PushDrop, Utils } from '@bsv/sdk'
 import docs from './docs/DIDLookupDocs.md.js'
-import { Db } from 'mongodb'
 import { DIDQuery } from 'mod.js'
+import { Db } from 'mongodb'
 
 /**
  * Implements a lookup service for DID tokens
@@ -22,7 +22,8 @@ class DIDLookupService implements LookupService {
     console.log(`DID lookup service outputAdded called with ${txid}.${outputIndex}`)
     // Decode the DID token fields from the Bitcoin outputScript
     const result = PushDrop.decode(lockingScript)
-    const serialNumber = Utils.toUTF8(result.fields[0])
+    // Serial number is stored as base64-encoded bytes, so decode back to base64 string
+    const serialNumber = Utils.toBase64(result.fields[0])
 
     console.log(
       'DID lookup service is storing a record',
@@ -50,7 +51,7 @@ class DIDLookupService implements LookupService {
     await this.storageManager.deleteRecord(txid, outputIndex)
   }
 
-  async lookup(question: LookupQuestion): Promise<LookupAnswer | LookupFormula> {
+  async lookup(question: LookupQuestion): Promise<LookupFormula> {
     console.log('DID lookup with question', question)
     if (question.query === undefined || question.query === null) {
       throw new Error('A valid query must be provided!')
